@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import com.cp.events.PostEvent;
+			import com.cp.vo.Post;
+			[Bindable] public var post:Post;
+			private function showPost():void{
+				var showPostEvent:PostEvent = new PostEvent(PostEvent.SHOW);
+				showPostEvent.data = post.id;
+				showPostEvent.dispatch();
+			}
+		]]>
+	</mx:Script>
+	<mx:DateFormatter id="postDateFormat" formatString="EEE D MMM YYYY" />
+	<mx:LinkButton label="{post.title}" click="showPost()" textAlign="left" fontSize="18" fontFamily="Arial"/>
+	<mx:Label text="{postDateFormat.format(post.createdAt)}" paddingLeft="20"  fontFamily="Arial" fontStyle="italic"/>
+	<mx:Text text="{post.body}" width="100%" paddingLeft="20"  fontFamily="Arial" fontSize="12"/>
+	
+</mx:VBox>

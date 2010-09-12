@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import com.cp.model.ModelLocator;
+			import com.cp.events.PostEvent;
+			[Bindable] private var _model:ModelLocator = ModelLocator.getInstance();
+			
+			private function submitPost():void{
+				var createPostEvent:PostEvent = new PostEvent(PostEvent.UPDATE);
+				createPostEvent.data = {
+					id:_model.currentPost.id,
+					post:{
+						title:postTitle.text,
+						body:postBody.text
+					}
+				};
+				createPostEvent.dispatch();
+			}
+		]]>
+	</mx:Script>
+	<mx:Form width="100%" height="100%">
+		<mx:FormHeading label="Create New Post" fontFamily="Arial"/>
+		<mx:FormItem label="Title:">
+			<mx:TextInput id="postTitle" text="{_model.currentPost.title}" width="300"/>
+		</mx:FormItem>
+		<mx:FormItem label="Content:" width="100%">
+			<mx:TextArea id="postBody" text="{_model.currentPost.body}" width="100%" height="300"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:Button click="submitPost()" label="Submit"/>
+		</mx:FormItem>
+	</mx:Form>
+	
+</mx:VBox>

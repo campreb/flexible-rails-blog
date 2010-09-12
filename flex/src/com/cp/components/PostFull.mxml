@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:components="com.contactify.components.*">
+	<mx:Script>
+		<![CDATA[
+			import com.cp.events.CommentEvent;
+			import com.cp.model.ModelLocator;
+			import com.cp.events.PostEvent;
+			import com.cp.vo.Post;
+			[Bindable] private var _model:ModelLocator = ModelLocator.getInstance();
+			private function submitComment():void{
+				var newCommentEvent:CommentEvent = new CommentEvent(CommentEvent.CREATE);
+				newCommentEvent.data = {
+					name: cfName.text,
+					email: cfEmail.text,
+					body: cfBody.text,
+					post_id: _model.currentPost.id
+				};
+				newCommentEvent.dispatch();
+			}
+		]]>
+	</mx:Script>
+	<mx:DateFormatter id="postDateFormat" formatString="EEE D MMM YYYY" />
+	<mx:LinkButton label="&lt; Go Back" click="new PostEvent(PostEvent.INDEX).dispatch()"/>
+	<mx:Label text="{_model.currentPost.title}" textAlign="left" fontSize="18" fontFamily="Arial"/>
+	<mx:Label text="{postDateFormat.format(_model.currentPost.createdAt)}" paddingLeft="20"  fontFamily="Arial" fontStyle="italic"/>
+	<mx:Text text="{_model.currentPost.body}" width="100%" paddingLeft="20"  fontFamily="Arial" fontSize="12"/>
+	<mx:LinkButton label="edit post" click="_model.currentView=3" />
+	<mx:HRule width="100%" />
+	<mx:Label text="Comments:" fontFamily="Arial" fontSize="14"/>
+	<mx:Box width="100%" paddingLeft="20">
+		<mx:Repeater id="commentsRepeater" dataProvider="{_model.currentPost.comments}">
+			<mx:HBox width="100%">
+				<mx:Image source="{commentsRepeater.currentItem.gravatarURL}" width="20" height="20"  autoLoad="true"/>
+				<mx:VBox width="100%">
+					<mx:Label text="{commentsRepeater.currentItem.name}"  fontFamily="Arial" fontWeight="bold" fontStyle="normal"/>
+					<mx:Text text="{commentsRepeater.currentItem.body}"  fontFamily="Arial" fontStyle="italic"/>
+					<mx:HRule width="100%" />
+				</mx:VBox>
+			</mx:HBox>
+		</mx:Repeater>
+	</mx:Box>
+	<mx:Form id="commentForm" width="100%" height="100%">
+		<mx:FormHeading label="Submit a Comment" fontFamily="Arial" fontWeight="bold"/>
+		<mx:FormItem label="Name:" width="300" fontFamily="Arial">
+			<mx:TextInput id="cfName" width="100%"/>
+		</mx:FormItem>
+		<mx:FormItem label="Email:" width="300"  fontFamily="Arial">
+			<mx:TextInput id="cfEmail" width="100%"/>
+		</mx:FormItem>
+		<mx:FormItem label="Comment:" width="300"  fontFamily="Arial">
+			<mx:TextArea id="cfBody" width="100%" height="100"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:Button id="cfSubmit" click="submitComment()" label="Submit" fontFamily="Arial"/>
+		</mx:FormItem>
+	</mx:Form>
+	
+</mx:VBox>
